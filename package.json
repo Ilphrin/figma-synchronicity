@@ -1,0 +1,19 @@
+{
+  "name": "figma-synchronicity",
+  "version": "0.1.0",
+  "description": "A JS library to synchronize your prototypes from Figma to your web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ilphrin/figma-synchronicity.git"
+  },
+  "author": "Kevin Ilphrin Pellet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ilphrin/figma-synchronicity/issues"
+  },
+  "homepage": "https://github.com/Ilphrin/figma-synchronicity#readme"
+}
