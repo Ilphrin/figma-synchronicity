@@ -19,7 +19,7 @@ import newSynchronicity from './index.js';
 const synchro = newSynchronicity('ePSiPQLnP2qH7X5hgxAJlEjE');
 
 document.addEventListener('FigmaSynchronicityEnabled', function() {
-  synchro.startWith(document.querySelector('#Synchronicity'));
+  synchro.startWith(document.querySelector('#Synchronicity'), 'MyFrame');
 });
 ```
 
@@ -27,14 +27,15 @@ _index.html_
 ```
 <!DOCTYPE html>
 <html>
-<head>
-<title>Figma Synchronicity</title>
-<meta charset="utf-8" />
-</head>
-<body>
-<div id="Synchronicity">
-</div>
-</body>
-<script src="./example.js" type="module"></script>
+  <head>
+    <title>Figma Synchronicity</title>
+    <meta charset="utf-8" />
+  </head>
+
+  <body>
+    <div id="Synchronicity">
+    </div>
+  </body>
+  <script src="./example.js" type="module"></script>
 </html>
 ```
