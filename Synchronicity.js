@@ -75,6 +75,9 @@ export default class Synchronicity {
 
   generateContent(parentElement, domParent) {
     for (let elem of parentElement.children) {
+      if (elem.visible === false) {
+        continue;
+      }
       let child = document.createElement('div');
       child.id = elem.name;
       child.style.position = 'absolute';
