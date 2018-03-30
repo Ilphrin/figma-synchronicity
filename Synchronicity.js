@@ -8,6 +8,7 @@ export default class Synchronicity {
     this.stylesheet = document.createElement('style');
     this.width = 0;
     this.height = 0;
+    this.ratio = 1;
     document.body.appendChild(this.stylesheet);
 
     let req = new Request('https://api.figma.com/v1/files/' + fileName);
@@ -66,8 +67,11 @@ export default class Synchronicity {
       let figmaElement = this.searchFigmaElement(value);
       this.width = figmaElement.absoluteBoundingBox.width;
       this.height = figmaElement.absoluteBoundingBox.height;
+      this.ratioW = this.width / window.innerWidth;
+      this.ratioH = this.height / window.innerHeight;
       if (figmaElement !== null) {
         this.syncBackgroundColor(figmaElement, key);
+        this.syncPosAndSize(figmaElement, key);
       }
       this.generateContent(figmaElement, key);
     }
@@ -78,30 +82,25 @@ export default class Synchronicity {
       if (elem.visible === false) {
         continue;
       }
-      let child = document.createElement('div');
-      child.id = elem.name;
-      child.style.position = 'absolute';
-      child.style.left = Math.abs(elem.absoluteBoundingBox.x - parentElement.absoluteBoundingBox.x) + 'px';
-      child.style.top = Math.abs(elem.absoluteBoundingBox.y - parentElement.absoluteBoundingBox.y) + 'px';
-      child.style.width = elem.absoluteBoundingBox.width + 'px';
-      if (elem.type === "TEXT") {
-        Object.assign(child.style, elem.style);
-      }
-      child.style.height = elem.absoluteBoundingBox.height / window.innerHeight * 100 + 'vh';
-      if (elem.type === "GROUP" || elem.type === "RECTANGLE") {
-        if (elem.type === "RECTANGLE") {
-          // child.style.marginBottom = '-' + child.style.height;
-        }
-      }
-      if (elem.type === "TEXT") {
-        this.syncText(elem, child);
-      }
-      this.syncBackgroundColor(elem, child);
-      domParent.appendChild(child);
+      let child = this.generateElement(elem, parentElement);
       if (elem.children && elem.children.length !== 0) {
         this.generateContent(elem, child);
       }
+      domParent.appendChild(child); 
     }
+  }
+
+  generateElement(figmaElement, parentElement) {
+    let child = document.createElement('div');
+    child.id = figmaElement.name;
+    child.style.position = 'absolute';
+    if (figmaElement.type === "TEXT") {
+      Object.assign(child.style, figmaElement.style);
+      this.syncText(figmaElement, child);
+    }
+    this.syncPosAndSize(figmaElement, child, parentElement);
+    this.syncBackgroundColor(figmaElement, child);
+    return child;
   }
 
   viewportPos(coord) {
@@ -123,6 +122,17 @@ export default class Synchronicity {
   syncText(figmaElement, domElem) {
     domElem.innerHTML = figmaElement.name;
     domElem.style.color = Synchronicity.FigmaRGBAToHex(figmaElement.fills[0].color);
+  }
+
+  syncPosAndSize(figmaElement, domElem, parentElement = null) {
+    if (parentElement !== null) {
+      let left = Math.abs(figmaElement.absoluteBoundingBox.x - parentElement.absoluteBoundingBox.x) / this.width * 100;
+      domElem.style.left = left * this.ratioW + 'vw';
+      let top = Math.abs(figmaElement.absoluteBoundingBox.y - parentElement.absoluteBoundingBox.y) / this.height * 100;
+      domElem.style.top = top * this.ratioH + 'vh';
+    }
+    domElem.style.width = figmaElement.absoluteBoundingBox.width / this.width * 100 * this.ratioW + 'vw';
+    domElem.style.height = figmaElement.absoluteBoundingBox.height / this.height * 100 * this.ratioH + 'vh';
   }
 
   static FigmaRGBAToHex(rgba) {
