@@ -8,7 +8,8 @@ export default class Synchronicity {
     this.stylesheet = document.createElement('style');
     this.width = 0;
     this.height = 0;
-    this.ratio = 1;
+    this.ratioW = 1;
+    this.ratioH = 1;
     document.body.appendChild(this.stylesheet);
 
     let req = new Request('https://api.figma.com/v1/files/' + fileName);
@@ -95,7 +96,6 @@ export default class Synchronicity {
     child.id = figmaElement.name;
     child.style.position = 'absolute';
     if (figmaElement.type === "TEXT") {
-      Object.assign(child.style, figmaElement.style);
       this.syncText(figmaElement, child);
     }
     this.syncPosAndSize(figmaElement, child, parentElement);
@@ -109,6 +109,7 @@ export default class Synchronicity {
 
   syncBackgroundColor(figmaElement, domElem) {
     let color;
+    if (figmaElement.type === "TEXT") { return; }
     if (figmaElement.fills && figmaElement.fills.length !== 0 && figmaElement.fills[0].color) {
       color = Synchronicity.FigmaRGBAToHex(figmaElement.fills[0].color);
     }
@@ -121,7 +122,10 @@ export default class Synchronicity {
 
   syncText(figmaElement, domElem) {
     domElem.innerHTML = figmaElement.name;
+    let size = figmaElement.style.fontSize;
+    Object.assign(domElem.style, figmaElement.style);
     domElem.style.color = Synchronicity.FigmaRGBAToHex(figmaElement.fills[0].color);
+    domElem.style.fontSize = `${size * this.ratioW}px`;
   }
 
   syncPosAndSize(figmaElement, domElem, parentElement = null) {
