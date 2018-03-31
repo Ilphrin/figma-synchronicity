@@ -100,6 +100,7 @@ export default class Synchronicity {
     }
     this.syncPosAndSize(figmaElement, child, parentElement);
     this.syncBackgroundColor(figmaElement, child);
+    this.syncEffect(figmaElement, child);
     return child;
   }
 
@@ -137,6 +138,20 @@ export default class Synchronicity {
     }
     domElem.style.width = figmaElement.absoluteBoundingBox.width / this.width * 100 * this.ratioW + 'vw';
     domElem.style.height = figmaElement.absoluteBoundingBox.height / this.height * 100 * this.ratioH + 'vh';
+  }
+
+  syncEffect(figmaElement, domElem) {
+    if (figmaElement.effects.length === 0 ) { return; }
+    let effect = figmaElement.effects[0];
+    switch(effect.type) {
+      case "DROP_SHADOW":
+        let color = Synchronicity.FigmaRGBAToHex(effect.color);
+        let offset = effect.offset;
+        let radius = effect.radius;
+        let boxShadow = `${offset.x}px ${offset.y}px ${radius}px ${color}`;
+        domElem.style.boxShadow = boxShadow; 
+        break;
+    }
   }
 
   static FigmaRGBAToHex(rgba) {

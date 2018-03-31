@@ -6,5 +6,5 @@
 
 ## 0.3.0
 
-- [ ] Add box-shadow effects
+- [x] Add box-shadow effects
 - [ ] Add Rectangle elements
