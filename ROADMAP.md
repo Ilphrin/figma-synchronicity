@@ -7,4 +7,9 @@
 ## 0.3.0
 
 - [x] Add box-shadow effects
-- [ ] Add Rectangle elements
+- [x] Add Rectangle elements
+
+## 0.4.0
+
+- [ ] Add Custom CSS rules on elements
+- [ ] Add Blur Effect
