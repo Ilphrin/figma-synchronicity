@@ -10,6 +10,7 @@ export default class Synchronicity {
     this.height = 0;
     this.ratioW = 1;
     this.ratioH = 1;
+    this.ratioF = 12;
     document.body.appendChild(this.stylesheet);
 
     let req = new Request('https://api.figma.com/v1/files/' + fileName);
@@ -122,11 +123,13 @@ export default class Synchronicity {
   }
 
   syncText(figmaElement, domElem) {
-    domElem.innerHTML = figmaElement.name;
+    let text = document.createTextNode(figmaElement.characters);
     let size = figmaElement.style.fontSize;
+    size = size / this.ratioF;
     Object.assign(domElem.style, figmaElement.style);
     domElem.style.color = Synchronicity.FigmaRGBAToHex(figmaElement.fills[0].color);
-    domElem.style.fontSize = `${size * this.ratioW}px`;
+    domElem.style.fontSize = `${size}em`;
+    domElem.appendChild(text);
   }
 
   syncPosAndSize(figmaElement, domElem, parentElement = null) {
