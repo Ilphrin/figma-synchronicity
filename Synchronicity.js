@@ -1,5 +1,7 @@
 import events from './SynchroEvents.js';
 import SynchroMap from './SynchroMap.js';
+import SynchroEffects from './SynchroEffects.js';
+import { FigmaRGBAToHex } from './utils.js';
 
 export default class Synchronicity {
   constructor(fileName, configFile) {
@@ -113,10 +115,10 @@ export default class Synchronicity {
     let color;
     if (figmaElement.type === "TEXT") { return; }
     if (figmaElement.fills && figmaElement.fills.length !== 0 && figmaElement.fills[0].color) {
-      color = Synchronicity.FigmaRGBAToHex(figmaElement.fills[0].color);
+      color = FigmaRGBAToHex(figmaElement.fills[0].color);
     }
     else if (figmaElement.backgroundColor) {
-      color = Synchronicity.FigmaRGBAToHex(figmaElement.backgroundColor);
+      color = FigmaRGBAToHex(figmaElement.backgroundColor);
     }
     else { return; }
     this.stylesheet.innerHTML += `#${domElem.id} { background-color: ${color}; }`;
@@ -127,7 +129,7 @@ export default class Synchronicity {
     let size = figmaElement.style.fontSize;
     size = size / this.ratioF;
     Object.assign(domElem.style, figmaElement.style);
-    domElem.style.color = Synchronicity.FigmaRGBAToHex(figmaElement.fills[0].color);
+    domElem.style.color = FigmaRGBAToHex(figmaElement.fills[0].color);
     domElem.style.fontSize = `${size}em`;
     domElem.appendChild(text);
   }
@@ -148,17 +150,12 @@ export default class Synchronicity {
     let effect = figmaElement.effects[0];
     switch(effect.type) {
       case "DROP_SHADOW":
-        let color = Synchronicity.FigmaRGBAToHex(effect.color);
-        let offset = effect.offset;
-        let radius = effect.radius;
-        let boxShadow = `${offset.x}px ${offset.y}px ${radius}px ${color}`;
-        domElem.style.boxShadow = boxShadow; 
+        SynchroEffects.boxShadow(figmaElement, domElem, effect);
+        break;
+      case "LAYER_BLUR":
+        console.log(effect);
+        SynchroEffects.layerBlur(figmaElement, domElem, effect);
         break;
     }
-  }
-
-  static FigmaRGBAToHex(rgba) {
-    var {r, g, b, a} = rgba;
-    return `rgba(${r * 255}, ${g * 255}, ${b * 255}, ${a})`;
   }
 }
