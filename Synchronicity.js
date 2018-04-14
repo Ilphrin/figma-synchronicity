@@ -2,11 +2,13 @@ import events from './SynchroEvents.js';
 import SynchroMap from './SynchroMap.js';
 import SynchroEffects from './SynchroEffects.js';
 import { FigmaRGBAToHex } from './utils.js';
+import SynchroOverride from './SynchroOverride.js';
 
 export default class Synchronicity {
   constructor(fileName, configFile) {
     this._doc = null;
     this.domSynchro = new SynchroMap();
+    this.overrides = new SynchroOverride();
     this.stylesheet = document.createElement('style');
     this.width = 0;
     this.height = 0;
@@ -104,6 +106,10 @@ export default class Synchronicity {
     this.syncPosAndSize(figmaElement, child, parentElement);
     this.syncBackgroundColor(figmaElement, child);
     this.syncEffect(figmaElement, child);
+    let overrideStyle = this.overrides.styleOverridesForKey(figmaElement.name);
+    if (overrideStyle !== null) {
+      Object.assign(child.style, overrideStyle);
+    }
     return child;
   }
 
@@ -153,7 +159,6 @@ export default class Synchronicity {
         SynchroEffects.boxShadow(figmaElement, domElem, effect);
         break;
       case "LAYER_BLUR":
-        console.log(effect);
         SynchroEffects.layerBlur(figmaElement, domElem, effect);
         break;
     }
