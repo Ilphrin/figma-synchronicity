@@ -5,10 +5,10 @@ import { FigmaRGBAToHex } from './utils.js';
 import SynchroOverride from './SynchroOverride.js';
 
 export default class Synchronicity {
-  constructor(fileName, configFile) {
+  constructor(fileName, config) {
     this._doc = null;
     this.domSynchro = new SynchroMap();
-    this.overrides = new SynchroOverride();
+    this.overrides = new SynchroOverride(config.overrides);
     this.stylesheet = document.createElement('style');
     this.width = 0;
     this.height = 0;
@@ -20,7 +20,7 @@ export default class Synchronicity {
     let req = new Request('https://api.figma.com/v1/files/' + fileName);
     fetch(req, {
       headers: {
-        'X-Figma-Token': configFile.token
+        'X-Figma-Token': config.token
       }
     }).then((res) => {
       return res.json();

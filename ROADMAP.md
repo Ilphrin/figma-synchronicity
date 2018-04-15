@@ -11,5 +11,5 @@
 
 ## 0.4.0
 
-- [ ] Add Custom CSS rules on elements
+- [x] Add Custom CSS rules on elements
 - [x] Add Blur Effect

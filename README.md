@@ -39,3 +39,23 @@ _index.html_
   <script src="./example.js" type="module"></script>
 </html>
 ```
+
+### Override styles on Figma elements
+
+You can add custom CSS on a figma element by adding configuration to the configuration file. For example, if you have a few nodes with the name "HELLO":
+
+_config.js_
+```
+export default {
+  "token": "my-token-for-the-api-123456" ,
+    "overrides": {
+      "HELLO": {
+        "style": {
+          "backgroundColor": "blue"
+        }
+      }
+    }
+}
+```
+
+You can put any __CSS rule with the JavaScript syntax__ to customize your element.

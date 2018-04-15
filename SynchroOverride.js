@@ -1,8 +1,6 @@
-import DATA from './override.js';
-
 export default class SynchroOverride {
-  constructor() {
-    this.data = DATA;
+  constructor(data) {
+    this.data = data;
     this.lastCalled = null;
   }
 
